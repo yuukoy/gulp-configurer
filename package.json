@@ -1,5 +1,6 @@
 {
   "name": "gulp-configurer",
+  "main": "gulp-configurer.js",
   "version": "0.0",
   "description": "Simple gulp configurer",
   "author": "Yuuko Yonemura <yuuko.yonemura@protonmail.com>",
