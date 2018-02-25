@@ -7,8 +7,8 @@ createConfigurator({
   templateEngine: gcg.templateEngines.pug,
   cssPreprocessor: gcg.cssPreprocessors.less,
   indexPageTemplateEngine: gcg.templateEngines.pug,
-  bundler: gcg.bundlers.webpack,
-  webpackConfig: require('./webpack.config.js'),
+  // bundler: gcg.bundlers.webpack,
+  // webpackConfig: require('./webpack.config.js'),
   useBrowserSync: true,
   verbose: true,
   gulp: require('gulp')

@@ -46,6 +46,10 @@
     }
   }
 
+  function logFileChanged(event) {
+    log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+  }
+
   function GenericError(message) {
     console.log(message)
     this.type = errorTypes.generalError
@@ -110,18 +114,27 @@
     }
 
     function gulpDefineDestinationTask(taskName, {globIn, pipes, outDir}) {
-    gulp.task(taskName, () => {
-      let stream = gulp.src(globIn)
+      gulp.task(taskName, () => {
+        let stream = gulp.src(globIn)
 
-      pipes.forEach(pipe => stream = stream.pipe(pipe))
+        pipes.forEach(pipe => stream = stream.pipe(pipe()))
 
-      return stream.pipe(gulp.dest(outDir))
-    })
-  }
+        return stream.pipe(gulp.dest(outDir))
+      })
+    }
 
-  function gulpDefineTask(taskName, task) {
-    gulp.task(taskName, task)
-  }
+    function gulpDefineTask(taskName, task) {
+      gulp.task(taskName, task)
+    }
+
+    function gulpCreateWatcher(glob, taskToExecute) {
+      let watcher = gulp.watch(glob, gulp.series(taskToExecute))
+      watcher.on('change', logFileChanged)
+    }
+
+    function gulpDefineSubtask(taskName, parentTask, task) {
+      gulp.task(taskName, parentTask, task)
+    }
 
     let paths = {}
     let globs = {}
@@ -181,7 +194,8 @@
     })()
 
     let configureGlobs = function () {
-      [['in_view',  paths.in_view, '**', getInViewGlobPart()],
+      [['in_index', paths.in_index],
+       ['in_view',  paths.in_view, '**', getInViewGlobPart()],
        ['in_style', paths.in_style, '**', getInStyleGlobPart()],
        ['in_script', paths.in_script, '**', '*.js'],
 
@@ -197,16 +211,6 @@
       }
     }
 
-    let defineBrowserSyncCreateTask = function() {
-      gulpDefineTask('browser-sync:create', (callback) => {
-        browserSync.init({
-          server: {
-            baseDir: options.dist_dir
-          }
-        });
-      })
-    }
-
     let defineBrowserSyncReloadTask = function() {
       gulpDefineTask('browser-sync:reload', (callback) => {
         browserSync.reload();
@@ -216,7 +220,6 @@
 
     let configureBrowserSyncTasks = function() {
       if (useBrowserSync) {
-        defineBrowserSyncCreateTask()
         defineBrowserSyncReloadTask()
       }
     }
@@ -238,7 +241,7 @@
     let defineIndexBundleTask = (function() {
       let pipes = {
         'pug': function () {
-          return [pug()]
+          return [pug]
         },
         'plain': function () {
           return []
@@ -280,7 +283,7 @@
     let defineViewBundleTask = (function() {
       let pipes = {
         'pug': function () {
-          return [pug()]
+          return [pug]
         },
         'plain': function () {
           return []
@@ -289,6 +292,7 @@
           throw new UnknownTemplateEngineError()
         }
       }
+
       let selectedPipes = (pipes[indexPageTemplateEngine] || pipes['default'])()
 
       return function() {
@@ -321,7 +325,7 @@
     let defineStyleBundleTask = (function() {
       let pipes = {
         'less': function () {
-          return [less()]
+          return [less]
         },
         'plain': function () {
           return []
@@ -331,9 +335,9 @@
         }
       }
 
-      let selectedPipes = (pipes[cssPreprocessor] || pipes['default'])()
-
       return function() {
+        let selectedPipes = (pipes[cssPreprocessor] || pipes['default'])()
+
         gulpDefineDestinationTask('bundle:style',
                                   {globIn: globs.in_style,
                                    pipes: selectedPipes,
@@ -408,6 +412,28 @@
       defineScriptTask()
     }
 
+    let defineWatchTask = function() {
+      gulpDefineTask('watch',() => {
+        if (useBrowserSync) {
+          browserSync.init({
+            server: {
+              baseDir: paths.out_index,
+              index: 'index.html'
+            }
+          })
+        }
+
+        gulpCreateWatcher(globs.in_index, 'index')
+        gulpCreateWatcher(globs.in_view, 'view')
+        gulpCreateWatcher(globs.in_style, 'style')
+        gulpCreateWatcher(globs.in_script, 'script')
+      })
+    }
+
+    let configureWatchTask = function() {
+      defineWatchTask()
+    }
+
     let configureDefaultTask = function() {
       let subtasks = ['index', 'view', 'style', 'script']
       
@@ -422,6 +448,7 @@
       configureStyleTasks()
       configureScriptTasks()
 
+      configureWatchTask()
       configureDefaultTask()
     }
 
