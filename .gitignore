@@ -1,5 +1,4 @@
 node_modules/**/*
 yarn.lock
-test/node_modules/**/*
-test/yarn.lock
-test/out/**/*
+test/**/*
+dist/**/*
