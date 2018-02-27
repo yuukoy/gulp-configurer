@@ -19,7 +19,7 @@ export default class ScriptTaskConfigurer extends TaskConfigurer {
     this.scriptTasks = {
       'webpack': () => {
         return (callback) => {
-          webpack(webpackConfig, (err, stats) => {
+          webpack(this.webpackConfig, (err, stats) => {
             if (err) {
               throw new PluginError('webpack:build', err);
             }

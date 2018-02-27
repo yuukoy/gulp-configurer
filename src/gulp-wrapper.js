@@ -73,6 +73,6 @@ export default class GulpWrapper {
   dest(...args) {
     let gulp = this._gulp
 
-    return gulp.src.dest(gulp, args)
+    return gulp.dest.apply(gulp, args)
   }
 }

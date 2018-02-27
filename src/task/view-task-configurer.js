@@ -41,7 +41,7 @@ export default class ViewTaskConfigurer extends TaskConfigurer {
     this.gulpWrapper.defineDestinationTask('bundle:view',
                                            {globIn: this.globs.get('in_view'),
                                             pipes: selectedPipes,
-                                            outDir: this.paths.get('out_view}')})
+                                            outDir: this.paths.get('out_view')})
   }
 
   defineViewTask() {
