@@ -14,9 +14,6 @@
     "build": "rollup -c",
     "prepublishOnly": "npm run build"
   },
-  "publishConfig": {
-    "registry": "http://localhost:4873"
-  },
   "author": "Yuuko Yonemura <yuuko.yonemura@protonmail.com>",
   "license": "MIT",
   "dependencies": {
