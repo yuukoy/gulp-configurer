@@ -1,18 +1,30 @@
 {
   "name": "gulp-configurer",
-  "main": "gulp-configurer.js",
-  "version": "0.0",
+  "version": "0.0.2",
   "description": "Simple gulp configurer",
+  "repository": {
+    "url": "yuukoy/gulp-configurer",
+    "type": "git"
+  },
+  "main": "dist/gulp-configurer.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:4873"
+  },
   "author": "Yuuko Yonemura <yuuko.yonemura@protonmail.com>",
   "license": "MIT",
-  "scripts": {
-    "build": "rollup -c"
-  },
   "dependencies": {
     "browser-sync": "^2.23.6",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-clean": "^0.4.0",
     "gulp-less": "^4.0.0",
+    "gulp-markdown": "^2.0.1",
     "gulp-pug": "^3.3.0",
     "webpack": "^4.0.0"
   },
