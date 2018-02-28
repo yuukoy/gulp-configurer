@@ -1,6 +1,6 @@
 {
   "name": "gulp-configurer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Simple gulp configurer",
   "repository": {
     "url": "yuukoy/gulp-configurer",
