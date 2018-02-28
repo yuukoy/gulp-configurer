@@ -8,7 +8,7 @@ export default function createConfigurator(userOptions) {
       let configurer = new GulpTaskConfigurer(configuration)
 
       configurer.configure()
-    }
+      }
     catch(e) {
       console.log(e)
     }
