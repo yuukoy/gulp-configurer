@@ -1,4 +1,5 @@
 import pug from 'gulp-pug'
+import markdown from 'gulp-markdown'
 
 import TaskConfigurer from './task-configurer'
 
@@ -13,10 +14,21 @@ export default class IndexTaskConfigurer extends TaskConfigurer {
     this.globs = configuration.get('globs')
     this.paths = configuration.get('paths')
     this.indexPageTemplateEngine = this.options.get('indexPageTemplateEngine')
+  }
 
-    this.pipes = {
+  defineIndexCleanTask() {
+    this.gulpWrapper.defineCleanTask('clean:index', this.globs.get('out_index'))
+  }
+
+  defineIndexBundleTask() {
+    let paths = this.paths
+
+    let pipes = {
       'pug': function () {
         return [pug]
+      },
+      'markdown': function () {
+        return [markdown]
       },
       'plain': function () {
         return []
@@ -26,15 +38,7 @@ export default class IndexTaskConfigurer extends TaskConfigurer {
         throw new Error('')
       }
     }
-  }
 
-  defineIndexCleanTask() {
-    this.gulpWrapper.defineCleanTask('clean:index', this.globs.get('out_index'))
-  }
-
-  defineIndexBundleTask() {
-    let pipes = this.pipes
-    let paths = this.paths
     let selectedPipes = (pipes[this.indexPageTemplateEngine] || pipes['default'])()
 
     this.gulpWrapper.defineDestinationTask('bundle:index',

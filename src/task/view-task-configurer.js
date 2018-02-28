@@ -1,4 +1,5 @@
 import pug from 'gulp-pug'
+import markdown from 'gulp-markdown'
 
 import TaskConfigurer from './task-configurer'
 
@@ -18,15 +19,18 @@ export default class ViewTaskConfigurer extends TaskConfigurer {
 
     this.pipes = {
       'pug': function () {
-         return [pug]
-       },
-       'plain': function () {
-         return []
-       },
-       'default': function () {
-         // throw new UnknownTemplateEngineError()
-         throw new Error('')
-       }
+        return [pug]
+      },
+      'markdown': function () {
+        return [markdown]
+      },
+      'plain': function () {
+        return []
+      },
+      'default': function () {
+        // throw new UnknownTemplateEngineError()
+        throw new Error('')
+      }
     }
   }
 

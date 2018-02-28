@@ -8,14 +8,21 @@ export default class StyleTaskConfigurer extends TaskConfigurer {
   constructor(configuration) {
     super(configuration)
     
-    this.configuration = configuration
-    this.gulpWrapper = configuration.get('gulpWrapper')
-    this.options = configuration.get('options')
     this.globs = configuration.get('globs')
     this.paths = configuration.get('paths')
-    this.cssPreprocessor = this.options.get('cssPreprocessor')
+    this.gulpWrapper = configuration.get('gulpWrapper')
 
-    this.pipes = {
+    let options = configuration.get('options')
+    this.useStyle = options.get('useStyle')
+    this.cssPreprocessor = options.get('cssPreprocessor')
+  }
+
+  defineStyleCleanTask() {
+    this.gulpWrapper.defineCleanTask('clean:style', this.globs.get('out_style'))
+  }
+
+  defineStyleBundleTask() {
+    let pipes = {
       'less': function () {
         return [less]
       },
@@ -27,14 +34,7 @@ export default class StyleTaskConfigurer extends TaskConfigurer {
         throw new Error('')
       }
     }
-  }
 
-  defineStyleCleanTask() {
-    this.gulpWrapper.defineCleanTask('clean:style', this.globs.get('out_style'))
-  }
-
-  defineStyleBundleTask() {
-    let pipes = this.pipes
     let selectedPipes = (pipes[this.cssPreprocessor] || pipes['default'])()
 
     this.gulpWrapper.defineDestinationTask('bundle:style',
@@ -53,8 +53,10 @@ export default class StyleTaskConfigurer extends TaskConfigurer {
   }
 
   configure() {
-    this.defineStyleCleanTask()
-    this.defineStyleBundleTask()
-    this.defineStyleTask()
+    if (this.useStyle) {
+      this.defineStyleCleanTask()
+      this.defineStyleBundleTask()
+      this.defineStyleTask()
+    }
   }
 }

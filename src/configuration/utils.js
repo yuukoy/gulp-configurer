@@ -18,6 +18,9 @@ export const getIndexPageFilename = (function() {
     'pug': function () {
       return 'index.pug'
     },
+    'markdown': function () {
+      return 'index.md'
+    },
     'plain': function () {
       return 'index.html'
     },
@@ -37,6 +40,9 @@ export const getInViewGlobPart = (function() {
   let viewGlobs = {
     'pug': function (_) {
       return '*.pug'
+    },
+    'markdown': function () {
+      return '*.md'
     },
     'plain': function (_) {
       return '*.html'

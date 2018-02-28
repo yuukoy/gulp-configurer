@@ -10,13 +10,22 @@ export default class ScriptTaskConfigurer extends TaskConfigurer {
     super(configuration)
 
     this.gulpWrapper = configuration.get('gulpWrapper')
-    this.options = configuration.get('options')
+
     this.globs = configuration.get('globs')
     this.paths = configuration.get('paths')
-    this.bundler = this.options.get('bundler')
-    this.webpackConfig = this.options.get('webpackConfig')
 
-    this.scriptTasks = {
+    let options = configuration.get('options')
+    this.bundler = options.get('bundler')
+    this.webpackConfig = options.get('webpackConfig')
+    this.useScript = options.get('useScript')
+  }
+
+  defineScriptCleanTask() {
+    this.gulpWrapper.defineCleanTask('clean:script', this.globs.get('out_script'))
+  }
+
+  defineScriptBundleTask() {
+    let scriptTasks = {
       'webpack': () => {
         return (callback) => {
           webpack(this.webpackConfig, (err, stats) => {
@@ -41,14 +50,7 @@ export default class ScriptTaskConfigurer extends TaskConfigurer {
         throw new Error('')
       }
     }
-  }
 
-  defineScriptCleanTask() {
-    this.gulpWrapper.defineCleanTask('clean:script', this.globs.get('out_script'))
-  }
-
-  defineScriptBundleTask() {
-    let scriptTasks = this.scriptTasks
     let gulpCallback = (scriptTasks[this.bundler] || scriptTasks['default'])()
 
     this.gulpWrapper.defineTask('bundle:script', gulpCallback)
@@ -64,8 +66,10 @@ export default class ScriptTaskConfigurer extends TaskConfigurer {
   }
 
   configure() {
-    this.defineScriptCleanTask()
-    this.defineScriptBundleTask()
-    this.defineScriptTask()
+    if (this.useScript) {
+      this.defineScriptCleanTask()
+      this.defineScriptBundleTask()
+      this.defineScriptTask()
+    }
   }
 }

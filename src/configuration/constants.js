@@ -1,6 +1,7 @@
 export const templateEngines = {
   plain: 'plain',
-  pug: 'pug'
+  pug: 'pug',
+  markdown: 'markdown'
 }
 
 export const cssPreprocessors = {
