@@ -6,5 +6,10 @@ export default {
     file: 'dist/gulp-configurer.js',
     format: 'cjs',
     sourcemap: true
-  }
+  },
+  plugins: [
+    babel({
+      exclude: 'node_modules/**'
+    })
+  ]
 }

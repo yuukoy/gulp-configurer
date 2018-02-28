@@ -5,6 +5,9 @@
   "description": "Simple gulp configurer",
   "author": "Yuuko Yonemura <yuuko.yonemura@protonmail.com>",
   "license": "MIT",
+  "scripts": {
+    "build": "rollup -c"
+  },
   "dependencies": {
     "browser-sync": "^2.23.6",
     "gulp": "gulpjs/gulp#4.0",

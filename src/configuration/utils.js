@@ -1,10 +1,9 @@
-import {GenericError} from './errors'
+import GenericError from '../error/generic'
+import UnknownTemplateEngineError from '../error/unknown-template-engine'
+import UnknownCssPreprocessorError from '../error/unknown-css-preprocessor'
 
 import {indexPageFilenames,
         templateEngines} from './constants'
-
-import {UnknownTemplateEngineError,
-        UnknownCssPreprocessorError} from './errors'
 
 export function fail(message) {
   throw new GenericError(message)

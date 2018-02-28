@@ -9,5 +9,9 @@
   ],
   "plugins": [
     "external-helpers"
+  ],
+  "ignore": [
+    "node_modules/**/*",
+    "test/**/*"
   ]
 }

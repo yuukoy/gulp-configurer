@@ -1,4 +1,4 @@
-import Configuration from './configuration'
+import Configuration from './configuration/configuration'
 import GulpTaskConfigurer from './task/gulp-task-configurer'
 
 export default function createConfigurator(userOptions) {
